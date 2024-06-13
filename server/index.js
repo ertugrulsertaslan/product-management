@@ -2,11 +2,29 @@ import express from "express";
 import bodyParser from "body-parser";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
+import { config } from "dotenv";
+import webpush from "web-push";
 const prisma = new PrismaClient();
 const app = express();
-
+config();
 app.use(cors());
 app.use(bodyParser.json());
+
+const PUBLIC_KEY = process.env.PUBLIC_KEY;
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
+
+webpush.setVapidDetails(
+  "mailto:example@yourdomain.org",
+  PUBLIC_KEY,
+  PRIVATE_KEY
+);
+let subscriptions = [];
+
+app.post("/products/subscribe", (req, res) => {
+  const subscription = req.body;
+  subscriptions.push(subscription);
+  res.status(201).json({});
+});
 
 app.get("/products", async (req, res) => {
   const products = await prisma.product.findMany();
@@ -18,6 +36,16 @@ app.get("/customer/products", async (req, res) => {
   res.json(products);
 });
 app.get("/products/update/:id", async (req, res) => {
+  const { id } = req.params;
+  const productId = parseInt(id);
+  const product = await prisma.product.findUnique({
+    where: {
+      id: productId,
+    },
+  });
+  res.json(product);
+});
+app.get("/customer/products/detail/:id", async (req, res) => {
   const { id } = req.params;
   const productId = parseInt(id);
   const product = await prisma.product.findUnique({

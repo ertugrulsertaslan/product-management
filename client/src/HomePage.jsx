@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 
-const apiUrl = "http://localhost:3000/products";
+import { Link } from "react-router-dom";
 
-function App() {
+const apiUrl = "http://localhost:3000/customer/products";
+function HomePage() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -27,6 +28,9 @@ function App() {
               <h3>{product.title}</h3>
               <p>{product.description}</p>
               <p className="price">₺{product.price}</p>
+              <Link to={`/customer/products/detail/${product.id}`}>
+                <button>Detail</button>
+              </Link>
             </div>
           ))}
         </div>
@@ -35,4 +39,4 @@ function App() {
   );
 }
 
-export default App;
+export default HomePage;

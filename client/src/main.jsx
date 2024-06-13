@@ -4,12 +4,12 @@ import App from "./App.jsx";
 import "./index.css";
 import HomePage from "./HomePage.jsx";
 import UpdateProduct from "./Components/updateProduct.jsx";
+import DetailProduct from "./Components/detailProduct.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <HomePage />,
   },
   {
     path: "/customer/products",
@@ -23,6 +23,10 @@ const router = createBrowserRouter([
   {
     path: "/products/update/:id",
     element: <UpdateProduct />,
+  },
+  {
+    path: "/customer/products/detail/:id",
+    element: <DetailProduct />,
   },
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(
