@@ -1,39 +1,44 @@
 import { useState, useEffect } from "react";
 import "../App.css";
-
+import { useParams } from "react-router-dom";
 const apiUrl = "http://localhost:3000/products";
-
 function UpdateProduct() {
   const [product, setProduct] = useState({});
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
+  const { id } = useParams();
+
+  useEffect(() => {
+    fetchProduct();
+  }, [product]);
 
   const fetchProduct = async () => {
+    const productId = id;
     try {
-      const response = await fetch(`${apiUrl}/update/${product.id}`);
+      const response = await fetch(`${apiUrl}/update/${productId}`);
       const data = await response.json();
       setProduct(data);
     } catch (error) {
-      console.error("Ürün getirme hatasi:", error);
+      console.error("Product delivery error:", error);
     }
   };
-  useEffect(() => {
-    fetchProduct();
-  }, []);
-
   const editProduct = async (id) => {
     const productId = parseInt(id);
-    const editedProduct = { ...product, title, description, price };
 
-    await fetch(`${apiUrl}/${productId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(editedProduct),
-    });
-    await fetchProducts();
+    if (title && description && price) {
+      const editedProduct = { ...product, title, description, price };
+      await fetch(`${apiUrl}/update/${productId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editedProduct),
+      });
+      await fetchProduct();
+    } else {
+      console.error("Cannot be null", error);
+    }
   };
   return (
     <>
@@ -64,7 +69,9 @@ function UpdateProduct() {
             onChange={(e) => setPrice(e.target.value)}
             required
           />
-          <button onClick={editProduct}>Update Product</button>
+          <button onClick={() => editProduct(product.id)}>
+            Update Product
+          </button>
         </div>
         <h2>Product List</h2>
 
@@ -72,7 +79,6 @@ function UpdateProduct() {
           <h3>{product.title}</h3>
           <p>{product.description}</p>
           <p className="price">₺{product.price}</p>
-          <button onClick={() => editProduct(product.id)}>Edit</button>
         </div>
       </div>
     </>
