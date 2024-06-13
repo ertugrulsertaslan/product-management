@@ -1,9 +1,39 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import { Link } from "react-router-dom";
+
+const { VITE_PUBLIC_KEY } = import.meta.env;
+
+const urlBase64ToUint8Array = (base64String) => {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const rawData = window.atob(base64);
+  return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
+};
+
 const apiUrl = "http://localhost:3000/products";
 
 function App() {
+  const subscribeToNotifications = async () => {
+    const registration = await navigator.serviceWorker.register(
+      "/service-worker.js"
+    );
+    const subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(VITE_PUBLIC_KEY),
+    });
+
+    await fetch(`${apiUrl}/subscribe`, {
+      method: "POST",
+      body: JSON.stringify(subscription),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    alert("Subscription successful!");
+  };
+
   const [products, setProducts] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -44,21 +74,13 @@ function App() {
     await fetchProducts();
   };
 
-  const handleUpdate = async (id) => {
-    const productId = parseInt(id);
-    console.log(productId);
-    await fetch(`${apiUrl}/update/${productId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  };
   return (
     <>
       <div className="App">
         <h1>Product Management</h1>
-
+        <button onClick={subscribeToNotifications}>
+          Subscribe to Notifications
+        </button>
         <div id="product-form">
           <h2>Add Product</h2>
           <label htmlFor="title">Product Name:</label>
@@ -96,7 +118,7 @@ function App() {
               <p className="price">₺{product.price}</p>
               <button onClick={() => deleteProduct(product.id)}>Delete</button>
               <Link to={`/products/update/${product.id}`}>
-                <button onClick={() => handleUpdate(product.id)}>Edit</button>
+                <button>Edit</button>
               </Link>
             </div>
           ))}
