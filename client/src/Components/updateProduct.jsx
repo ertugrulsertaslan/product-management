@@ -1,4 +1,9 @@
 import { useState, useEffect } from "react";
+import { Container, Button, TextField } from "@mui/material";
+import { AppBar, Toolbar, Typography } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { Grid, Card, CardContent, CardMedia } from "@mui/material";
+import { Link } from "react-router-dom";
 import "../App.css";
 import { useParams } from "react-router-dom";
 const apiUrl = "http://localhost:3000/products";
@@ -40,48 +45,107 @@ function UpdateProduct() {
       console.error("Cannot be null", error);
     }
   };
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: "#1976d2",
+      },
+      grey: {
+        main: "#f5f5f5",
+      },
+      red: {
+        main: "#f44336",
+      },
+    },
+  });
   return (
-    <>
-      <div className="App">
-        <div id="product-form">
-          <h2>Update Product </h2>
-          <label htmlFor="title">Product Name:</label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-          <label htmlFor="description">Description:</label>
-          <input
-            type="text"
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-          <label htmlFor="price">Price:</label>
-          <input
-            type="number"
-            id="price"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            required
-          />
-          <button onClick={() => editProduct(product.id)}>
-            Update Product
-          </button>
-        </div>
-        <h2>Product List</h2>
-
-        <div className="product" key={product.id}>
-          <h3>{product.title}</h3>
-          <p>{product.description}</p>
-          <p className="price">₺{product.price}</p>
-        </div>
-      </div>
-    </>
+    <Container>
+      <ThemeProvider theme={theme}>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              Fashion Avenue
+            </Typography>
+            <Link to={`/`}>
+              <Button color="grey">Home</Button>
+            </Link>
+            <Link to={`/customer/products`}>
+              <Button color="grey">Products</Button>
+            </Link>
+          </Toolbar>
+        </AppBar>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <h2>Add Product</h2>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              type="text"
+              id="title"
+              label="Product Name"
+              variant="outlined"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              type="text"
+              id="description"
+              label="Description"
+              variant="outlined"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+              multiline
+              rows={4}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              type="number"
+              id="price"
+              label="Price"
+              variant="outlined"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              required
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              onClick={() => editProduct(product.id)}
+              variant="contained"
+              color="primary"
+            >
+              Edit Product
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid container spacing={2} mt={2}>
+          <Grid item xs={12} sm={6} md={4} key={product.id}>
+            <Card>
+              <CardMedia component="img" height="140" />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {product.title}
+                </Typography>
+                <Typography variant="body1" color="text.secondary">
+                  {product.description}
+                </Typography>
+                <Typography variant="h6" color="text.secondary">
+                  ${product.price}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      </ThemeProvider>
+    </Container>
   );
 }
 

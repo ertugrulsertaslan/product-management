@@ -1,4 +1,9 @@
 import { useState, useEffect } from "react";
+import { Container, Button, TextField } from "@mui/material";
+import { AppBar, Toolbar, Typography } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { Grid, Card, CardContent, CardMedia } from "@mui/material";
+
 import "./App.css";
 
 import { Link } from "react-router-dom";
@@ -17,24 +22,46 @@ function HomePage() {
     const data = JSON.parse(text);
     setProducts(data);
   };
-
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: "#1976d2",
+      },
+      grey: {
+        main: "#f5f5f5",
+      },
+      red: {
+        main: "#f44336",
+      },
+    },
+  });
   return (
     <>
-      <div className="App">
-        <h2>Product List</h2>
-        <div id="product-list">
-          {products.map((product) => (
-            <div className="product" key={product.id}>
-              <h3>{product.title}</h3>
-              <p>{product.description}</p>
-              <p className="price">₺{product.price}</p>
-              <Link to={`/customer/products/detail/${product.id}`}>
-                <button>Detail</button>
+      <Container>
+        <ThemeProvider theme={theme}>
+          <AppBar position="static">
+            <Toolbar>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                Fashion Avenue
+              </Typography>
+              <Link to={`/`}>
+                <Button color="grey">Home</Button>
               </Link>
-            </div>
-          ))}
-        </div>
-      </div>
+              <Link to={`/customer/products`}>
+                <Button color="grey">Products</Button>
+              </Link>
+            </Toolbar>
+          </AppBar>
+          <Grid container spacing={2} mt={2}>
+            <Link to={`/products`}>
+              <Button color="red">Admin Panel</Button>
+            </Link>
+            <Link to={`/customer/products`}>
+              <Button color="red">Customer</Button>
+            </Link>
+          </Grid>
+        </ThemeProvider>
+      </Container>
     </>
   );
 }
