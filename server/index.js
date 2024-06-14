@@ -23,6 +23,7 @@ let subscriptions = [];
 app.post("/products/subscribe", (req, res) => {
   const subscription = req.body;
   subscriptions.push(subscription);
+
   res.status(201).json({});
 });
 
@@ -71,17 +72,37 @@ app.put("/products/update/:id", async (req, res) => {
   const { id } = req.params;
   const productId = parseInt(id);
   const { title, description, price } = req.body;
-  const updateProduct = await prisma.product.update({
-    where: { id: productId },
-    data: {
-      title,
-      description,
-      price,
-    },
-  });
-  res.json(updateProduct);
-});
 
+  try {
+    const updatedProduct = await prisma.product.update({
+      where: { id: productId },
+      data: { title, description, price },
+    });
+
+    const notificationPayload = {
+      notification: {
+        title: "Ürün Güncellendi",
+        body: `Ürün "${updatedProduct.title}" güncellendi.`,
+        icon: "icon-url",
+      },
+    };
+
+    const promises = subscriptions.map((sub) =>
+      webpush
+        .sendNotification(sub, JSON.stringify(notificationPayload))
+        .catch((err) => {
+          console.error(`Error sending notification to ${sub.endpoint}:`, err);
+        })
+    );
+
+    await Promise.all(promises);
+
+    res.json(updatedProduct);
+  } catch (err) {
+    console.error("Error updating product:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 app.delete("/products/:id", async (req, res) => {
   const { id } = req.params;
   const productId = parseInt(id);
