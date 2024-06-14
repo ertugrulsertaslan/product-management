@@ -5,6 +5,7 @@ import "./index.css";
 import HomePage from "./HomePage.jsx";
 import UpdateProduct from "./Components/updateProduct.jsx";
 import DetailProduct from "./Components/detailProduct.jsx";
+import CustomerProduct from "./Components/customerProduct.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 const router = createBrowserRouter([
   {
@@ -13,7 +14,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/customer/products",
-    element: <HomePage />,
+    element: <CustomerProduct />,
     errorElement: <div>404 Not Found</div>,
   },
   {
