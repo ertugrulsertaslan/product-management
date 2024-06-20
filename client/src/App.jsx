@@ -3,7 +3,6 @@ import { Container, Button, TextField } from "@mui/material";
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Grid, Card, CardContent, CardMedia } from "@mui/material";
-
 import "./App.css";
 import { Link } from "react-router-dom";
 
@@ -43,6 +42,7 @@ function App() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
+  const [photo, setPhoto] = useState(null);
 
   useEffect(() => {
     fetchProducts();
@@ -55,18 +55,20 @@ function App() {
     setProducts(data);
   };
   const addProduct = async () => {
-    const newProduct = { title, description, price };
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("photo", photo);
     await fetch(apiUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newProduct),
+      body: formData,
     });
     await fetchProducts();
     setTitle("");
     setDescription("");
     setPrice(0);
+    setPhoto(null);
   };
   const deleteProduct = async (id) => {
     const productId = parseInt(id);
@@ -156,6 +158,14 @@ function App() {
             />
           </Grid>
           <Grid item xs={12}>
+            <input
+              type="file"
+              name="photo"
+              id="photo"
+              onChange={(e) => setPhoto(e.target.files[0])}
+            />
+          </Grid>
+          <Grid item xs={12}>
             <Button onClick={addProduct} variant="contained" color="primary">
               Add Product
             </Button>
@@ -165,7 +175,11 @@ function App() {
           {products.map((product) => (
             <Grid item xs={12} sm={6} md={4} key={product.id}>
               <Card>
-                <CardMedia component="img" height="140" />
+                <CardMedia
+                  component="img"
+                  src={product.photoPath}
+                  height="140"
+                />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
                     {product.title}

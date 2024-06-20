@@ -4,11 +4,30 @@ import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 import { config } from "dotenv";
 import webpush from "web-push";
+import path from "path";
+import { fileURLToPath } from "url";
+import multer from "multer";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const prisma = new PrismaClient();
 const app = express();
 config();
 app.use(cors());
-app.use(bodyParser.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "_" + file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 const PUBLIC_KEY = process.env.PUBLIC_KEY;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
@@ -56,13 +75,18 @@ app.get("/customer/products/detail/:id", async (req, res) => {
   });
   res.json(product);
 });
-app.post("/products", async (req, res) => {
+app.post("/products", upload.single("photo"), async (req, res) => {
   const { title, description, price } = req.body;
+  const photoPath = req.file
+    ? `http://localhost:3000/uploads/${req.file.filename}`
+    : null;
+
   const newProduct = await prisma.product.create({
     data: {
       title,
       description,
       price,
+      photoPath,
     },
   });
   res.json(newProduct);
@@ -81,8 +105,8 @@ app.put("/products/update/:id", async (req, res) => {
 
     const notificationPayload = {
       notification: {
-        title: "Ürün Güncellendi",
-        body: `Ürün "${updatedProduct.title}" güncellendi.`,
+        title: "Product updated",
+        body: `Product "${updatedProduct.title}" updated.`,
         icon: "icon-url",
       },
     };
