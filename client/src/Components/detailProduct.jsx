@@ -64,7 +64,13 @@ function detailProduct() {
         <Grid container spacing={2} mt={2}>
           <Grid item xs={12} sm={6} md={6}>
             <Card sx={{ height: "100%" }}>
-              <CardMedia component="img" src={product.photoPath} height="500" />
+              {product.photoPath && (
+                <CardMedia
+                  component="img"
+                  src={product.photoPath[0].url}
+                  height="450"
+                />
+              )}
             </Card>
           </Grid>
           <Grid item xs={12} sm={6} md={6} key={product.id}>
@@ -93,6 +99,34 @@ function detailProduct() {
                   ${product.price}
                 </Typography>
               </CardContent>
+            </Card>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={12}
+            sx={{
+              display: "flex",
+              height: "100%",
+            }}
+          >
+            <Card
+              sx={{
+                display: "flex",
+                height: "100%",
+              }}
+            >
+              {product.photoPath &&
+                product.photoPath.map((photo, index) => (
+                  <CardMedia
+                    sx={{ margin: 2.5 }}
+                    key={index} // Benzersiz key prop ekleyin
+                    component="img"
+                    src={photo.url} // photo.url olarak düzeltin
+                    height="150"
+                  />
+                ))}
             </Card>
           </Grid>
         </Grid>

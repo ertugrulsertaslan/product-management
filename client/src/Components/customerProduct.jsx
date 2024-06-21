@@ -101,11 +101,13 @@ function customerProduct() {
           {products.map((product) => (
             <Grid item xs={12} sm={6} md={4} key={product.id}>
               <Card>
-                <CardMedia
-                  component="img"
-                  src={product.photoPath}
-                  height="250"
-                />
+                {product.photoPath && (
+                  <CardMedia
+                    component="img"
+                    src={product.photoPath[0].url}
+                    height="250"
+                  />
+                )}
                 <CardContent>
                   <Typography
                     gutterBottom

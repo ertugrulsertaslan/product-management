@@ -47,12 +47,20 @@ app.post("/customer/products/subscribe", (req, res) => {
 });
 
 app.get("/products", async (req, res) => {
-  const products = await prisma.product.findMany();
+  const products = await prisma.product.findMany({
+    include: {
+      photoPath: true,
+    },
+  });
   res.json(products);
 });
 
 app.get("/customer/products", async (req, res) => {
-  const products = await prisma.product.findMany();
+  const products = await prisma.product.findMany({
+    include: {
+      photoPath: true,
+    },
+  });
   res.json(products);
 });
 app.get("/products/update/:id", async (req, res) => {
@@ -61,6 +69,9 @@ app.get("/products/update/:id", async (req, res) => {
   const product = await prisma.product.findUnique({
     where: {
       id: productId,
+    },
+    include: {
+      photoPath: true,
     },
   });
   res.json(product);
@@ -72,38 +83,57 @@ app.get("/customer/products/detail/:id", async (req, res) => {
     where: {
       id: productId,
     },
+    include: {
+      photoPath: true,
+    },
   });
   res.json(product);
 });
-app.post("/products", upload.single("photo"), async (req, res) => {
+app.post("/products", upload.array("photo", 3), async (req, res) => {
   const { title, description, price } = req.body;
-  const photoPath = req.file
-    ? `http://localhost:3000/uploads/${req.file.filename}`
-    : null;
+  const photoPath = req.files.map((file) => ({
+    url: "http://localhost:3000/uploads/" + file.filename,
+  }));
 
   const newProduct = await prisma.product.create({
     data: {
       title,
       description,
       price,
-      photoPath,
+      photoPath: { create: photoPath },
     },
   });
+
   res.json(newProduct);
 });
 
-app.put("/products/update/:id", upload.single("photo"), async (req, res) => {
+app.put("/products/update/:id", upload.array("photo", 3), async (req, res) => {
   const { id } = req.params;
   const productId = parseInt(id);
   const { title, description, price } = req.body;
-  const photoPath = req.file
-    ? `http://localhost:3000/uploads/${req.file.filename}`
-    : null;
+  const photoPath = req.files.map((file) => ({
+    url: "http://localhost:3000/uploads/" + file.filename,
+  }));
 
   try {
+    await prisma.productPhoto.deleteMany({
+      where: { productId: productId },
+    });
+
     const updatedProduct = await prisma.product.update({
       where: { id: productId },
-      data: { title, description, price, photoPath },
+      data: {
+        title,
+        description,
+        price,
+      },
+    });
+
+    await prisma.productPhoto.createMany({
+      data: photoPath.map((photo) => ({
+        url: photo.url,
+        productId: productId,
+      })),
     });
 
     const notificationPayload = {
@@ -123,7 +153,6 @@ app.put("/products/update/:id", upload.single("photo"), async (req, res) => {
     );
 
     await Promise.all(promises);
-
     res.json(updatedProduct);
   } catch (err) {
     console.error("Error updating product:", err);
@@ -133,6 +162,9 @@ app.put("/products/update/:id", upload.single("photo"), async (req, res) => {
 app.delete("/products/:id", async (req, res) => {
   const { id } = req.params;
   const productId = parseInt(id);
+  await prisma.productPhoto.deleteMany({
+    where: { productId: productId },
+  });
   const deletedProduct = await prisma.product.delete({
     where: { id: productId },
   });

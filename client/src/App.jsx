@@ -14,7 +14,7 @@ function App() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
-  const [photo, setPhoto] = useState(null);
+  const [photos, setPhotos] = useState([null]);
 
   useEffect(() => {
     fetchProducts();
@@ -31,7 +31,10 @@ function App() {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("price", price);
-    formData.append("photo", photo);
+    photos.forEach((file) => {
+      formData.append(`photo`, file);
+    });
+
     await fetch(apiUrl, {
       method: "POST",
       body: formData,
@@ -40,7 +43,7 @@ function App() {
     setTitle("");
     setDescription("");
     setPrice(0);
-    setPhoto(null);
+    setPhotos([]);
   };
   const deleteProduct = async (id) => {
     const productId = parseInt(id);
@@ -150,7 +153,8 @@ function App() {
               id="photo"
               variant="outlined"
               required
-              onChange={(e) => setPhoto(e.target.files[0])}
+              onChange={(e) => setPhotos([...e.target.files])}
+              inputProps={{ multiple: true }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -165,11 +169,13 @@ function App() {
           {products.map((product) => (
             <Grid item xs={12} sm={6} md={4} key={product.id}>
               <Card>
-                <CardMedia
-                  component="img"
-                  src={product.photoPath}
-                  height="250"
-                />
+                {product.photoPath && (
+                  <CardMedia
+                    component="img"
+                    src={product.photoPath[0].url}
+                    height="250"
+                  />
+                )}
                 <CardContent>
                   <Typography
                     gutterBottom
