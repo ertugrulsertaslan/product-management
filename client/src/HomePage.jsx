@@ -3,6 +3,7 @@ import { Container, Button, TextField } from "@mui/material";
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Grid, Card, CardContent, CardMedia } from "@mui/material";
+import ButtonGroup from "@mui/material/ButtonGroup";
 
 import "./App.css";
 
@@ -25,7 +26,7 @@ function HomePage() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: "#1976d2",
+        main: "#25D366",
       },
       grey: {
         main: "#f5f5f5",
@@ -41,11 +42,18 @@ function HomePage() {
         <ThemeProvider theme={theme}>
           <AppBar position="static">
             <Toolbar>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              <Typography
+                variant="h6"
+                color="white"
+                component="div"
+                sx={{ flexGrow: 1 }}
+              >
                 Fashion Avenue
               </Typography>
               <Link to={`/`}>
-                <Button color="grey">Home</Button>
+                <Button color="grey" component="div">
+                  Home
+                </Button>
               </Link>
               <Link to={`/customer/products`}>
                 <Button color="grey">Products</Button>
@@ -53,12 +61,36 @@ function HomePage() {
             </Toolbar>
           </AppBar>
           <Grid container spacing={2} mt={2}>
-            <Link to={`/products`}>
-              <Button color="red">Admin Panel</Button>
-            </Link>
-            <Link to={`/customer/products`}>
-              <Button color="red">Customer</Button>
-            </Link>
+            <ButtonGroup
+              disableElevation
+              variant="contained"
+              aria-label="Disabled button group"
+            >
+              <Link to={`/products`}>
+                <Button>
+                  <Typography
+                    variant="h5"
+                    color="white"
+                    component="div"
+                    sx={{ flexGrow: 1 }}
+                  >
+                    Admin Panel
+                  </Typography>
+                </Button>
+              </Link>
+              <Link to={`/customer/products`}>
+                <Button>
+                  <Typography
+                    variant="h5"
+                    color="white"
+                    component="div"
+                    sx={{ flexGrow: 1 }}
+                  >
+                    Customer
+                  </Typography>
+                </Button>
+              </Link>
+            </ButtonGroup>
           </Grid>
         </ThemeProvider>
       </Container>

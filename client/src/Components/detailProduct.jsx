@@ -30,7 +30,7 @@ function detailProduct() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: "#1976d2",
+        main: "#25D366",
       },
       grey: {
         main: "#f5f5f5",

@@ -3,7 +3,6 @@ import { Container, Button, TextField } from "@mui/material";
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Grid, Card, CardContent, CardMedia } from "@mui/material";
-
 import { Link } from "react-router-dom";
 
 const apiUrl = "http://localhost:3000/customer/products";
@@ -23,10 +22,10 @@ function customerProduct() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: "#1976d2",
+        main: "#25D366",
       },
       grey: {
-        main: "#f5f5f5",
+        main: "#e9e9eb",
       },
       red: {
         main: "#f44336",
@@ -34,11 +33,16 @@ function customerProduct() {
     },
   });
   return (
-    <Container>
+    <Container color="grey">
       <ThemeProvider theme={theme}>
         <AppBar position="static">
           <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Typography
+              variant="h6"
+              color="white"
+              component="div"
+              sx={{ flexGrow: 1 }}
+            >
               Fashion Avenue
             </Typography>
             <Link to={`/`}>
@@ -53,7 +57,11 @@ function customerProduct() {
           {products.map((product) => (
             <Grid item xs={12} sm={6} md={4} key={product.id}>
               <Card>
-                <CardMedia component="img" height="140" />
+                <CardMedia
+                  component="img"
+                  src={product.photoPath}
+                  height="250"
+                />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
                     {product.title}
@@ -65,6 +73,9 @@ function customerProduct() {
                     ${product.price}
                   </Typography>
                 </CardContent>
+                <Link to={`/customer/products/detail/${product.id}`}>
+                  <Button>Detail</Button>
+                </Link>
               </Card>
             </Grid>
           ))}

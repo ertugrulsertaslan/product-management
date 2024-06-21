@@ -48,7 +48,7 @@ function UpdateProduct() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: "#1976d2",
+        main: "#25D366",
       },
       grey: {
         main: "#f5f5f5",
@@ -63,7 +63,12 @@ function UpdateProduct() {
       <ThemeProvider theme={theme}>
         <AppBar position="static">
           <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Typography
+              variant="h6"
+              color="white"
+              component="div"
+              sx={{ flexGrow: 1 }}
+            >
               Fashion Avenue
             </Typography>
             <Link to={`/`}>
@@ -76,7 +81,9 @@ function UpdateProduct() {
         </AppBar>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <h2>Add Product</h2>
+            <Typography variant="h4" component="div" color="text.secondary">
+              Edit Product
+            </Typography>
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -122,14 +129,16 @@ function UpdateProduct() {
               variant="contained"
               color="primary"
             >
-              Edit Product
+              <Typography variant="p" color="white">
+                Edit Product
+              </Typography>
             </Button>
           </Grid>
         </Grid>
         <Grid container spacing={2} mt={2}>
           <Grid item xs={12} sm={6} md={4} key={product.id}>
             <Card>
-              <CardMedia component="img" height="140" />
+              <CardMedia component="img" src={product.photoPath} height="250" />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
                   {product.title}

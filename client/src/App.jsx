@@ -3,6 +3,7 @@ import { Container, Button, TextField } from "@mui/material";
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Grid, Card, CardContent, CardMedia } from "@mui/material";
+import { CloudUpload as CloudUploadIcon } from "@mui/icons-material";
 import "./App.css";
 import { Link } from "react-router-dom";
 
@@ -83,13 +84,16 @@ function App() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: "#1976d2",
+        main: "#25D366",
       },
       grey: {
         main: "#f5f5f5",
       },
       red: {
         main: "#f44336",
+      },
+      green: {
+        main: "#25D366",
       },
     },
   });
@@ -98,8 +102,13 @@ function App() {
       <ThemeProvider theme={theme}>
         <AppBar position="static">
           <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Fashion Avenue
+            <Typography
+              variant="h6"
+              color="white"
+              component="div"
+              sx={{ flexGrow: 1 }}
+            >
+              Fruit Avenue
             </Typography>
             <Link to={`/`}>
               <Button color="grey">Home</Button>
@@ -110,7 +119,7 @@ function App() {
           </Toolbar>
         </AppBar>
         <Grid item xs={12}>
-          <h1>Product Management</h1>
+          <h1 color="black">Product Management</h1>
           <Button color="red" onClick={subscribeToNotifications}>
             Subscribe to Notifications
           </Button>
@@ -158,16 +167,20 @@ function App() {
             />
           </Grid>
           <Grid item xs={12}>
-            <input
+            <TextField
               type="file"
               name="photo"
               id="photo"
+              variant="outlined"
+              required
               onChange={(e) => setPhoto(e.target.files[0])}
             />
           </Grid>
           <Grid item xs={12}>
             <Button onClick={addProduct} variant="contained" color="primary">
-              Add Product
+              <Typography variant="p" color="white">
+                Add Product
+              </Typography>
             </Button>
           </Grid>
         </Grid>
@@ -178,7 +191,7 @@ function App() {
                 <CardMedia
                   component="img"
                   src={product.photoPath}
-                  height="140"
+                  height="250"
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
@@ -190,11 +203,14 @@ function App() {
                   <Typography variant="h6" color="text.secondary">
                     ${product.price}
                   </Typography>
-                  <Button color="red" onClick={() => deleteProduct(product.id)}>
+                  <Button
+                    color="green"
+                    onClick={() => deleteProduct(product.id)}
+                  >
                     Delete
                   </Button>
                   <Link to={`/products/update/${product.id}`}>
-                    <Button color="red">Edit</Button>
+                    <Button color="green">Edit</Button>
                   </Link>
                 </CardContent>
               </Card>
