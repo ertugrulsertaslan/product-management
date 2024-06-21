@@ -182,7 +182,16 @@ function App() {
                   <Typography
                     variant="body1"
                     color="text.secondary"
-                    sx={{ margin: 1 }}
+                    sx={{
+                      display: "-webkit-box",
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      WebkitLineClamp: 2,
+                      lineClamp: 2,
+                      height: "auto",
+                      margin: 1,
+                    }}
                   >
                     {product.description}
                   </Typography>
