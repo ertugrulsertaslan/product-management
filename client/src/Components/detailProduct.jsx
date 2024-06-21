@@ -45,7 +45,12 @@ function detailProduct() {
       <ThemeProvider theme={theme}>
         <AppBar position="static">
           <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Typography
+              variant="h6"
+              component="div"
+              color="white"
+              sx={{ flexGrow: 1 }}
+            >
               Fashion Avenue
             </Typography>
             <Link to={`/`}>
@@ -57,17 +62,34 @@ function detailProduct() {
           </Toolbar>
         </AppBar>
         <Grid container spacing={2} mt={2}>
-          <Grid item xs={12} sm={6} md={4} key={product.id}>
-            <Card>
-              <CardMedia component="img" height="140" />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
+          <Grid item xs={12} sm={6} md={6}>
+            <Card sx={{ height: "100%" }}>
+              <CardMedia component="img" src={product.photoPath} height="500" />
+            </Card>
+          </Grid>
+          <Grid item xs={12} sm={6} md={6} key={product.id}>
+            <Card sx={{ height: "100%" }}>
+              <CardContent
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  height: "75%",
+                }}
+              >
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="div"
+                  color="primary"
+                >
                   {product.title}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
                   {product.description}
                 </Typography>
-                <Typography variant="h6" mt={2} color="text.secondary">
+                <Typography variant="h6" color="primary">
                   ${product.price}
                 </Typography>
               </CardContent>
