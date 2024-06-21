@@ -3,6 +3,7 @@ import { Container, Button, TextField } from "@mui/material";
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Grid, Card, CardContent, CardMedia } from "@mui/material";
+import { Alert, AlertTitle, Stack } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const { VITE_PUBLIC_KEY } = import.meta.env;
@@ -16,6 +17,7 @@ const urlBase64ToUint8Array = (base64String) => {
 
 const apiUrl = "http://localhost:3000/customer/products";
 function customerProduct() {
+  const [showAlert, setShowAlert] = useState(false);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -44,8 +46,10 @@ function customerProduct() {
         "Content-Type": "application/json",
       },
     });
-
-    alert("Subscription successful!");
+    setShowAlert(true);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 3000);
   };
   const theme = createTheme({
     palette: {
@@ -86,6 +90,12 @@ function customerProduct() {
           <Button color="primary" onClick={subscribeToNotifications}>
             Subscribe to Notifications
           </Button>
+          {showAlert && (
+            <Alert severity="success">
+              <AlertTitle>Success</AlertTitle>
+              Successfully subscribed
+            </Alert>
+          )}
         </Grid>
         <Grid container spacing={2} mt={2}>
           {products.map((product) => (
@@ -108,7 +118,16 @@ function customerProduct() {
                   <Typography
                     variant="body1"
                     color="text.secondary"
-                    sx={{ margin: 1 }}
+                    sx={{
+                      display: "-webkit-box",
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      WebkitLineClamp: 2,
+                      lineClamp: 2,
+                      height: "auto",
+                      margin: 1,
+                    }}
                   >
                     {product.description}
                   </Typography>
