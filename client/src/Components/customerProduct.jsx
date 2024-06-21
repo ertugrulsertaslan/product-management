@@ -5,6 +5,15 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Grid, Card, CardContent, CardMedia } from "@mui/material";
 import { Link } from "react-router-dom";
 
+const { VITE_PUBLIC_KEY } = import.meta.env;
+
+const urlBase64ToUint8Array = (base64String) => {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const rawData = window.atob(base64);
+  return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
+};
+
 const apiUrl = "http://localhost:3000/customer/products";
 function customerProduct() {
   const [products, setProducts] = useState([]);
@@ -18,6 +27,25 @@ function customerProduct() {
     const text = await response.text();
     const data = JSON.parse(text);
     setProducts(data);
+  };
+  const subscribeToNotifications = async () => {
+    const registration = await navigator.serviceWorker.register(
+      "/service-worker.js"
+    );
+    const subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(VITE_PUBLIC_KEY),
+    });
+
+    await fetch(`${apiUrl}/subscribe`, {
+      method: "POST",
+      body: JSON.stringify(subscription),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    alert("Subscription successful!");
   };
   const theme = createTheme({
     palette: {
@@ -53,6 +81,12 @@ function customerProduct() {
             </Link>
           </Toolbar>
         </AppBar>
+        <Grid item xs={12}>
+          <h1 color="black">Subscribe to Notifications</h1>
+          <Button color="primary" onClick={subscribeToNotifications}>
+            Subscribe to Notifications
+          </Button>
+        </Grid>
         <Grid container spacing={2} mt={2}>
           {products.map((product) => (
             <Grid item xs={12} sm={6} md={4} key={product.id}>
@@ -63,18 +97,31 @@ function customerProduct() {
                   height="250"
                 />
                 <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="div"
+                    sx={{ margin: 1 }}
+                  >
                     {product.title}
                   </Typography>
-                  <Typography variant="body1" color="text.secondary">
+                  <Typography
+                    variant="body1"
+                    color="text.secondary"
+                    sx={{ margin: 1 }}
+                  >
                     {product.description}
                   </Typography>
-                  <Typography variant="h6" color="text.secondary">
+                  <Typography
+                    variant="h6"
+                    color="text.secondary"
+                    sx={{ margin: 1 }}
+                  >
                     ${product.price}
                   </Typography>
                 </CardContent>
                 <Link to={`/customer/products/detail/${product.id}`}>
-                  <Button>Detail</Button>
+                  <Button sx={{ margin: 2 }}> Detail</Button>
                 </Link>
               </Card>
             </Grid>

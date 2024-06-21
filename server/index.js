@@ -39,7 +39,7 @@ webpush.setVapidDetails(
 );
 let subscriptions = [];
 
-app.post("/products/subscribe", (req, res) => {
+app.post("/customer/products/subscribe", (req, res) => {
   const subscription = req.body;
   subscriptions.push(subscription);
 
@@ -92,15 +92,18 @@ app.post("/products", upload.single("photo"), async (req, res) => {
   res.json(newProduct);
 });
 
-app.put("/products/update/:id", async (req, res) => {
+app.put("/products/update/:id", upload.single("photo"), async (req, res) => {
   const { id } = req.params;
   const productId = parseInt(id);
   const { title, description, price } = req.body;
+  const photoPath = req.file
+    ? `http://localhost:3000/uploads/${req.file.filename}`
+    : null;
 
   try {
     const updatedProduct = await prisma.product.update({
       where: { id: productId },
-      data: { title, description, price },
+      data: { title, description, price, photoPath },
     });
 
     const notificationPayload = {

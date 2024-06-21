@@ -12,6 +12,7 @@ function UpdateProduct() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
+  const [photo, setPhoto] = useState(null);
   const { id } = useParams();
 
   useEffect(() => {
@@ -30,15 +31,15 @@ function UpdateProduct() {
   };
   const editProduct = async (id) => {
     const productId = parseInt(id);
-
-    if (title && description && price) {
-      const editedProduct = { ...product, title, description, price };
+    if (title && description && price && photo) {
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("price", price);
+      formData.append("photo", photo);
       await fetch(`${apiUrl}/update/${productId}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(editedProduct),
+        body: formData,
       });
       await fetchProduct();
     } else {
@@ -46,6 +47,9 @@ function UpdateProduct() {
     }
   };
   const theme = createTheme({
+    typography: {
+      fontFamily: "Roboto, sans-serif",
+    },
     palette: {
       primary: {
         main: "#25D366",
@@ -81,7 +85,12 @@ function UpdateProduct() {
         </AppBar>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h4" component="div" color="text.secondary">
+            <Typography
+              variant="h4"
+              component="div"
+              color="black"
+              sx={{ marginTop: 5, marginBottom: 2 }}
+            >
               Edit Product
             </Typography>
           </Grid>
@@ -124,6 +133,16 @@ function UpdateProduct() {
             />
           </Grid>
           <Grid item xs={12}>
+            <TextField
+              type="file"
+              name="photo"
+              id="photo"
+              variant="outlined"
+              required
+              onChange={(e) => setPhoto(e.target.files[0])}
+            />
+          </Grid>
+          <Grid item xs={12}>
             <Button
               onClick={() => editProduct(product.id)}
               variant="contained"
@@ -140,13 +159,26 @@ function UpdateProduct() {
             <Card>
               <CardMedia component="img" src={product.photoPath} height="250" />
               <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="div"
+                  sx={{ margin: 1 }}
+                >
                   {product.title}
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
+                <Typography
+                  variant="body1"
+                  color="text.secondary"
+                  sx={{ margin: 1 }}
+                >
                   {product.description}
                 </Typography>
-                <Typography variant="h6" color="text.secondary">
+                <Typography
+                  variant="h6"
+                  color="text.secondary"
+                  sx={{ margin: 1 }}
+                >
                   ${product.price}
                 </Typography>
               </CardContent>

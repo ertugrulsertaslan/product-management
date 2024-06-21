@@ -3,42 +3,13 @@ import { Container, Button, TextField } from "@mui/material";
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Grid, Card, CardContent, CardMedia } from "@mui/material";
-import { CloudUpload as CloudUploadIcon } from "@mui/icons-material";
+
 import "./App.css";
 import { Link } from "react-router-dom";
-
-const { VITE_PUBLIC_KEY } = import.meta.env;
-
-const urlBase64ToUint8Array = (base64String) => {
-  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
-  const rawData = window.atob(base64);
-  return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
-};
 
 const apiUrl = "http://localhost:3000/products";
 
 function App() {
-  const subscribeToNotifications = async () => {
-    const registration = await navigator.serviceWorker.register(
-      "/service-worker.js"
-    );
-    const subscription = await registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(VITE_PUBLIC_KEY),
-    });
-
-    await fetch(`${apiUrl}/subscribe`, {
-      method: "POST",
-      body: JSON.stringify(subscription),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    alert("Subscription successful!");
-  };
-
   const [products, setProducts] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -82,6 +53,9 @@ function App() {
     await fetchProducts();
   };
   const theme = createTheme({
+    typography: {
+      fontFamily: "Roboto, sans-serif",
+    },
     palette: {
       primary: {
         main: "#25D366",
@@ -118,15 +92,18 @@ function App() {
             </Link>
           </Toolbar>
         </AppBar>
-        <Grid item xs={12}>
-          <h1 color="black">Product Management</h1>
-          <Button color="red" onClick={subscribeToNotifications}>
-            Subscribe to Notifications
-          </Button>
-        </Grid>
+
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <h2>Add Product</h2>
+            {" "}
+            <Typography
+              variant="h4"
+              component="div"
+              color="black"
+              sx={{ marginTop: 5, marginBottom: 5 }}
+            >
+              Add Product
+            </Typography>
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -194,23 +171,39 @@ function App() {
                   height="250"
                 />
                 <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="div"
+                    sx={{ margin: 1 }}
+                  >
                     {product.title}
                   </Typography>
-                  <Typography variant="body1" color="text.secondary">
+                  <Typography
+                    variant="body1"
+                    color="text.secondary"
+                    sx={{ margin: 1 }}
+                  >
                     {product.description}
                   </Typography>
-                  <Typography variant="h6" color="text.secondary">
+                  <Typography
+                    variant="h6"
+                    color="text.secondary"
+                    sx={{ margin: 1 }}
+                  >
                     ${product.price}
                   </Typography>
                   <Button
                     color="green"
                     onClick={() => deleteProduct(product.id)}
+                    sx={{ margin: 1 }}
                   >
                     Delete
                   </Button>
                   <Link to={`/products/update/${product.id}`}>
-                    <Button color="green">Edit</Button>
+                    <Button color="green" sx={{ margin: 1 }}>
+                      Edit
+                    </Button>
                   </Link>
                 </CardContent>
               </Card>
