@@ -3,7 +3,8 @@ import { Container, Button, TextField } from "@mui/material";
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Grid, Card, CardContent, CardMedia } from "@mui/material";
-
+import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
+import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 import "./App.css";
 import { Link } from "react-router-dom";
 
@@ -145,8 +146,12 @@ function App() {
               required
               fullWidth
             />
+            <AttachMoneyOutlinedIcon sx={{ fontSize: 55, marginRight: 1 }} />
           </Grid>
           <Grid item xs={12}>
+            <AddPhotoAlternateOutlinedIcon
+              sx={{ fontSize: 55, marginRight: 1 }}
+            />
             <TextField
               type="file"
               name="photo"
