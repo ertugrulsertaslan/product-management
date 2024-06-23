@@ -146,7 +146,6 @@ function App() {
               required
               fullWidth
             />
-            <AttachMoneyOutlinedIcon sx={{ fontSize: 55, marginRight: 1 }} />
           </Grid>
           <Grid item xs={12}>
             <AddPhotoAlternateOutlinedIcon
