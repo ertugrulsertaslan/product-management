@@ -128,8 +128,8 @@ function detailProduct() {
                   bgcolor: "background.paper",
                   boxShadow: 24,
                   p: 4,
-                  width: "80%",
-                  maxWidth: 600,
+                  width: "100%",
+                  maxWidth: 1100,
                 }}
               >
                 {hasPhotos && (
@@ -138,7 +138,7 @@ function detailProduct() {
                     alt={`product-image-${currentIndex}`}
                     style={{
                       width: "100%",
-                      maxHeight: 400,
+                      maxHeight: 700,
                       objectFit: "contain",
                     }}
                   />
