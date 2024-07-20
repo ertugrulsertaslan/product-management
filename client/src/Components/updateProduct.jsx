@@ -8,7 +8,7 @@ import "../App.css";
 import { useParams } from "react-router-dom";
 const apiUrl = "http://localhost:3000/products";
 function UpdateProduct() {
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
@@ -17,8 +17,7 @@ function UpdateProduct() {
 
   useEffect(() => {
     fetchProduct();
-    //console.log(product);
-  }, [product]);
+  }, []);
 
   const fetchProduct = async () => {
     const productId = id;
@@ -86,6 +85,7 @@ function UpdateProduct() {
             </Link>
           </Toolbar>
         </AppBar>
+
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography
@@ -158,43 +158,47 @@ function UpdateProduct() {
             </Button>
           </Grid>
         </Grid>
-        <Grid container spacing={2} mt={2}>
-          <Grid item xs={12} sm={6} md={4} key={product.id}>
-            <Card>
-              {product.photoPath && (
-                <CardMedia
-                  component="img"
-                  src={product.photoPath[0].url}
-                  height="250"
-                />
-              )}
-              <CardContent>
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="div"
-                  sx={{ margin: 1 }}
-                >
-                  {product.title}
-                </Typography>
-                <Typography
-                  variant="body1"
-                  color="text.secondary"
-                  sx={{ margin: 1 }}
-                >
-                  {product.description}
-                </Typography>
-                <Typography
-                  variant="h6"
-                  color="text.secondary"
-                  sx={{ margin: 1 }}
-                >
-                  ${product.price}
-                </Typography>
-              </CardContent>
-            </Card>
+        {product ? (
+          <Grid container spacing={2} mt={2}>
+            <Grid item xs={12} sm={6} md={4} key={product.id}>
+              <Card>
+                {product.photoPath.length > 0 && (
+                  <CardMedia
+                    component="img"
+                    src={product.photoPath[0].url}
+                    height="250"
+                  />
+                )}
+                <CardContent>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="div"
+                    sx={{ margin: 1 }}
+                  >
+                    {product.title}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    color="text.secondary"
+                    sx={{ margin: 1 }}
+                  >
+                    {product.description}
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    color="text.secondary"
+                    sx={{ margin: 1 }}
+                  >
+                    ${product.price}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
-        </Grid>
+        ) : (
+          "Loading"
+        )}
       </ThemeProvider>
     </Container>
   );

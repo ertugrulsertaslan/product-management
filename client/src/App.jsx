@@ -18,7 +18,7 @@ function App() {
 
   useEffect(() => {
     fetchProducts();
-  }, [products]);
+  }, []);
 
   const fetchProducts = async () => {
     const response = await fetch(apiUrl);
@@ -172,7 +172,7 @@ function App() {
           {products.map((product) => (
             <Grid item xs={12} sm={6} md={4} key={product.id}>
               <Card>
-                {product.photoPath && (
+                {product.photoPath.length > 0 && (
                   <CardMedia
                     component="img"
                     src={product.photoPath[0].url}
