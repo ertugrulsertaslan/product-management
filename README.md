@@ -2,6 +2,14 @@
 
 This project is an e-commerce application with admin and user roles. Admin users can add, delete, and update products, while regular users can view the list of products and check the details of the products they like.
 
+
+### Screenshots 📸
+
+<div style="display: flex; flex-direction: row;">
+    <img src="screenshots/admin-page.png" alt="Admin Page" style="width: 50%; margin-right: 4%;">
+    <img src="screenshots/customer-page.png" alt="Customer Page" style="width: 49%;">
+</div>
+
 ## Features ✨
 
 - ⚙️ Admin users can add,delete,update products.
@@ -122,12 +130,7 @@ after running scripts go to `http://localhost:5173` with your browser to use the
 ### User Actions 👥
 - Viewing the list of products and checking product details.👁️
 
-### Screenshots 📸
 
-<div style="display: flex; flex-direction: row;">
-    <img src="screenshots/admin-page.png" alt="Admin Page" style="width: 50%; margin-right: 4%;">
-    <img src="screenshots/customer-page.png" alt="Customer Page" style="width: 49%;">
-</div>
 
 ## License 📄
 
